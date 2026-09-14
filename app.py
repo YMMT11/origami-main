@@ -208,7 +208,7 @@ else:
     audio_path = current_step_data.get("audio")
     total_steps = len(STEPS)
     
-    if audio_path and st.session_state.spoken_step != step_num and is_camera_on:
+    if audio_path:
      with open(audio_path, "rb") as f:
       audio_bytes = f.read()
 
