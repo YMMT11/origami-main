@@ -208,6 +208,28 @@ else:
     audio_path = current_step_data.get("audio")
     total_steps = len(STEPS)
     
+    if audio_path and st.session_state.spoken_step != step_num and is_camera_on:
+     with open(audio_path, "rb") as f:
+      audio_bytes = f.read()
+
+    import base64
+
+    audio_base64 = base64.b64encode(audio_bytes).decode()
+
+    st.components.v1.html(
+        f"""
+        <audio autoplay>
+            <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mpeg">
+        </audio>
+        """,
+        height=0,
+    )
+    
+    # 手動再生
+    #if audio_path:
+        #st.audio(audio_path, format="audio/mp3")
+    
+
     st.subheader(f"Step {step_num} / {total_steps}")
     
     # 1. 後からメッセージを書き換えるためのプレースホルダーを作成
@@ -234,35 +256,6 @@ else:
         # 2. カメラの起動状態を確認
         is_camera_on = ctx.state.playing if ctx and ctx.state else False
 
-        # ==============================
-        # カメラ起動後に音声を1回だけ再生
-        # ==============================
-        
-        if "spoken_step" not in st.session_state:
-            st.session_state.spoken_step = None
-        
-        if (
-            is_camera_on
-            and audio_path
-            and st.session_state.spoken_step != step_num
-        ):
-            with open(audio_path, "rb") as f:
-                audio_bytes = f.read()
-        
-            import base64
-            audio_base64 = base64.b64encode(audio_bytes).decode()
-        
-            st.components.v1.html(
-                f"""
-                <audio autoplay>
-                    <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mpeg">
-                </audio>
-                """,
-                height=0,
-            )
-        
-            st.session_state.spoken_step = step_num
-     
         # 3. カメラの状態に応じて表示テキストとデザインを切り替え
         if is_camera_on:
             label_text = "instructions :"
