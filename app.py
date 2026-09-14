@@ -181,7 +181,7 @@ if step_num == 5:
         with btn_col2:
             if st.button("Restart ", use_container_width=True):
                 st.session_state.tutor = OrigamiTutor(STEPS)
-                st.rerun()
+                #st.rerun()
 else:
     # リフレッシュ間隔を1000ms (1秒) に広げて全体再描画の負荷を軽減
     st_autorefresh(interval=1000, key="origami_step_checker")
@@ -254,10 +254,10 @@ else:
                 ctx.video_processor.reset_counter()
                 tutor.next_step()
 
-                if not tutor.is_finished():
-                    speak(tutor.get_current_step()["instruction"])
+                #if not tutor.is_finished():
+                    #speak(tutor.get_current_step()["instruction"])
                     
-                st.rerun()
+                #st.rerun()
 
     with col2:
         image_path = current_step_data.get("image")
@@ -281,9 +281,9 @@ else:
                 if tutor.current_step > 0:
                     tutor.current_step -= 1
                     tutor.finished = False
-                    st.rerun()
+                    #st.rerun()
 
         with btn_col2:
             if st.button("Next step", use_container_width=True):
                 tutor.next_step()
-                st.rerun()
+                #st.rerun()
