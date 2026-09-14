@@ -8,7 +8,12 @@ from streamlit_webrtc import VideoProcessorBase, WebRtcMode, webrtc_streamer
 
 import demo
 from origami_tutor import STEPS, OrigamiTutor
+<<<<<<< HEAD
  
+=======
+
+
+>>>>>>> 6e4e031a2c13caa67f0ae10da2da197a5e249ce9
 st.set_page_config(page_title="Origami tutor：Heart", layout="wide")
 
 # MediaPipe Hands の初期化
@@ -138,6 +143,7 @@ class OrigamiProcessor(VideoProcessorBase):
 # ---------------------------------------------------------
 # メイン画面処理
 # ---------------------------------------------------------
+
 step_num = tutor.get_current_step_number()
 
 if step_num == 5:
@@ -178,7 +184,30 @@ else:
 
     current_step_data = tutor.get_current_step()
     instruction = current_step_data["instruction"]
+    audio_path = current_step_data.get("audio")
     total_steps = len(STEPS)
+    
+    if audio_path:
+    with open(audio_path, "rb") as f:
+        audio_bytes = f.read()
+
+    import base64
+
+    audio_base64 = base64.b64encode(audio_bytes).decode()
+
+    st.components.v1.html(
+        f"""
+        <audio autoplay>
+            <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mpeg">
+        </audio>
+        """,
+        height=0,
+    )
+    
+    # 手動再生
+    #if audio_path:
+        #st.audio(audio_path, format="audio/mp3")
+    
 
     st.subheader(f"Step {step_num} / {total_steps}")
     
