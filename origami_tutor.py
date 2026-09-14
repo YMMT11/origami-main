@@ -134,7 +134,6 @@ class OrigamiTutor:
         else:
 
             print("\nMoving to the next step.")
-            speak("Moving to the next step.")
             
 
     # ---------------------------------------------
