@@ -7,7 +7,21 @@ from streamlit_autorefresh import st_autorefresh
 from streamlit_webrtc import VideoProcessorBase, WebRtcMode, webrtc_streamer
 
 import demo
-from origami_tutor import STEPS, OrigamiTutor, speak
+from origami_tutor import STEPS, OrigamiTutor
+
+def speak(text):
+    st.components.v1.html(
+        f"""
+        <script>
+        const text = {text!r};
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "ja-JP";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+        </script>
+        """,
+        height=0,
+    )
 
 st.set_page_config(page_title="Origami tutor：Heart", layout="wide")
 
@@ -138,7 +152,17 @@ class OrigamiProcessor(VideoProcessorBase):
 # ---------------------------------------------------------
 # メイン画面処理
 # ---------------------------------------------------------
+
+# 音声を再生したStepを記録
+if "spoken_step" not in st.session_state:
+    st.session_state.spoken_step = 0
+
 step_num = tutor.get_current_step_number()
+
+# Stepが変わったときだけ音声を再生
+if st.session_state.spoken_step != step_num:
+    speak(tutor.get_current_step()["instruction"])
+    st.session_state.spoken_step = step_num
 
 if step_num == 5:
     st.balloons()
