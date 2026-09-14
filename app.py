@@ -254,16 +254,14 @@ else:
         )
         if ctx.video_processor:
 
-        # 現在のTutorのステップとCV側のステップが違う場合
-        if ctx.video_processor.step_num != step_num:
-            ctx.video_processor.set_step(step_num)
-    
-        # 正しい折り方が一定フレーム続いた場合だけ次へ進む
-        if ctx.video_processor.is_ok:
-
-            ctx.video_processor.reset_counter()
-    
-            tutor.next_step()
+            # 現在のTutorのステップとCV側のステップが違う場合
+            if ctx.video_processor.step_num != step_num:
+                ctx.video_processor.set_step(step_num)
+        
+            # 正しい折り方が一定フレーム続いた場合だけ次へ進む
+            if ctx.video_processor.is_ok:
+                ctx.video_processor.reset_counter()
+                tutor.next_step()
 
                 #if not tutor.is_finished():
                     #speak(tutor.get_current_step()["instruction"])
