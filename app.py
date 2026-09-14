@@ -3,7 +3,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import streamlit as st
-#from streamlit_autorefresh import st_autorefresh
+from streamlit_autorefresh import st_autorefresh
 from streamlit_webrtc import VideoProcessorBase, WebRtcMode, webrtc_streamer
 
 import demo
@@ -48,11 +48,6 @@ class OrigamiProcessor(VideoProcessorBase):
             min_tracking_confidence=0.5,
         )
 
-    def set_counter(self, step_num):
-        self.step_num = step_num
-        self.ok_counter = 0
-        self.is_ok = False
-    
     def reset_counter(self):
         self.ok_counter = 0
         self.is_ok = False
@@ -143,21 +138,11 @@ class OrigamiProcessor(VideoProcessorBase):
 # ---------------------------------------------------------
 # メイン画面処理
 # ---------------------------------------------------------
-
-# 音声を再生したか
-if "spoken_step" not in st.session_state:
-    st.session_state.spoken_step = 0
-
 step_num = tutor.get_current_step_number()
-
-# 
-if st.session_state.spoken_step != step_num:
-    speak(tutor.get_current_step()["instruction"])
-    st.session_state.spoken_step = step_num
 
 if step_num == 5:
     st.balloons()
-    st.success("🎉 finished!")
+    st.success("🎉 finished！")
 
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -173,7 +158,7 @@ if step_num == 5:
             st.info("No image")
 
     with col2:
-        st.write("### Good job!")
+        st.write("### Good job！")
         st.divider()
 
         btn_col1, btn_col2 = st.columns(2)
@@ -186,10 +171,10 @@ if step_num == 5:
         with btn_col2:
             if st.button("Restart ", use_container_width=True):
                 st.session_state.tutor = OrigamiTutor(STEPS)
-                #st.rerun()
+                st.rerun()
 else:
     # リフレッシュ間隔を1000ms (1秒) に広げて全体再描画の負荷を軽減
-    #st_autorefresh(interval=1000, key="origami_step_checker")
+    st_autorefresh(interval=1000, key="origami_step_checker")
 
     current_step_data = tutor.get_current_step()
     instruction = current_step_data["instruction"]
@@ -253,20 +238,11 @@ else:
             unsafe_allow_html=True
         )
         if ctx.video_processor:
-
-            # 現在のTutorのステップとCV側のステップが違う場合
-            if ctx.video_processor.step_num != step_num:
-                ctx.video_processor.set_step(step_num)
-        
-            # 正しい折り方が一定フレーム続いた場合だけ次へ進む
+            ctx.video_processor.step_num = step_num
             if ctx.video_processor.is_ok:
                 ctx.video_processor.reset_counter()
                 tutor.next_step()
-
-                #if not tutor.is_finished():
-                    #speak(tutor.get_current_step()["instruction"])
-                    
-                #st.rerun()
+                st.rerun()
 
     with col2:
         image_path = current_step_data.get("image")
@@ -290,9 +266,9 @@ else:
                 if tutor.current_step > 0:
                     tutor.current_step -= 1
                     tutor.finished = False
-                    #st.rerun()
+                    st.rerun()
 
         with btn_col2:
             if st.button("Next step", use_container_width=True):
                 tutor.next_step()
-                #st.rerun()
+                st.rerun()
