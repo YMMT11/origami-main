@@ -183,8 +183,8 @@ else:
     total_steps = len(STEPS)
     
     if audio_path:
-    with open(audio_path, "rb") as f:
-        audio_bytes = f.read()
+     with open(audio_path, "rb") as f:
+      audio_bytes = f.read()
 
     import base64
 
