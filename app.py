@@ -142,6 +142,32 @@ class OrigamiProcessor(VideoProcessorBase):
 step_num = tutor.get_current_step_number()
 
 if step_num == 5:
+
+    # STEP5の音声を再生
+    current_step_data = tutor.get_current_step()
+    audio_path = current_step_data.get("audio")
+
+    if "spoken_step" not in st.session_state:
+        st.session_state.spoken_step = 0
+
+    if audio_path and st.session_state.spoken_step != step_num:
+        with open(audio_path, "rb") as f:
+            audio_bytes = f.read()
+
+        import base64
+        audio_base64 = base64.b64encode(audio_bytes).decode()
+
+        st.components.v1.html(
+            f"""
+            <audio autoplay>
+                <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mpeg">
+            </audio>
+            """,
+            height=0,
+        )
+
+        st.session_state.spoken_step = step_num
+
     st.balloons()
     st.success("🎉 finished！")
 
