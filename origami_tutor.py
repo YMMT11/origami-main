@@ -2,24 +2,6 @@ import streamlit as st
 import time
 #from check_origamis import check_origami
 
-
-# =========================================================
-# 音声
-# =========================================================
-
-def speak(text):
-    st.components.v1.html(
-        f"""
-        <script>
-        const utterance = new SpeechSynthesisUtterance({text!r});
-        utterance.lang = "ja-JP";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utterance);
-        </script>
-        """,
-        height=0,
-    )
-
 # =========================================================
 # 折り紙チューター：ハートの折り方
 # 手順管理プログラム
