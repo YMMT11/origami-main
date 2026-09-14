@@ -148,7 +148,7 @@ if step_num == 5:
     audio_path = current_step_data.get("audio")
 
     if "spoken_step" not in st.session_state:
-        st.session_state.spoken_step = 0
+        st.session_state.spoken_step = None
 
     if audio_path and st.session_state.spoken_step != step_num:
         with open(audio_path, "rb") as f:
