@@ -8,7 +8,7 @@ from streamlit_webrtc import VideoProcessorBase, WebRtcMode, webrtc_streamer
 
 import demo
 from origami_tutor import STEPS, OrigamiTutor
-
+ 
 st.set_page_config(page_title="Origami tutor：Heart", layout="wide")
 
 # MediaPipe Hands の初期化
