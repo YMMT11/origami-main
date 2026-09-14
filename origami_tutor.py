@@ -29,31 +29,36 @@ STEPS = [
     {
         "step": 1,
         "instruction": "Fold the top corner down to the center crease.",
-        "image": "images/STEP1.png"
+        "image": "images/STEP1.png",
+        "audio": "audio/STEP1.mp3"
     },# 上の角を中心線に合うように折る
 
     {
         "step": 2,
         "instruction": "Fold the bottom corner up to the crease on the top edge.",
-        "image": "images/STEP2.png"
+        "image": "images/STEP2.png",
+        "audio": "audio/STEP2.mp3"
     },# 下の角が上の辺の中心に合うように折る
 
     {
         "step": 3,
         "instruction": "Fold the lower left and lower right edges diagonally toward the center crease.",
-        "image": "images/STEP3.png"
+        "image": "images/STEP3.png",
+        "audio": "audio/STEP3.mp3"
     },# 下の辺を中央線に向かって左右に折る
 
     {
         "step": 4,
         "instruction": "Fold the top and the four side corners backward as shown in the picture.",
-        "image": "images/STEP4.png"
+        "image": "images/STEP4.png",
+        "audio": "audio/STEP4.mp3"
     },# 裏返し、4つの角を折ると完成する
 
     {
         "step": 5,
         "instruction": "fin.",
-        "image": "images/STEP5.png"
+        "image": "images/STEP5.png",
+        "audio": "audio/STEP5.mp3"
     }
 ]
 
