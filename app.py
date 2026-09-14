@@ -7,7 +7,7 @@ from streamlit_autorefresh import st_autorefresh
 from streamlit_webrtc import VideoProcessorBase, WebRtcMode, webrtc_streamer
 
 import demo
-from origami_tutor import STEPS, OrigamiTutor
+from origami_tutor import STEPS, OrigamiTutor, speak
 
 st.set_page_config(page_title="Origami tutor：Heart", layout="wide")
 
@@ -138,11 +138,21 @@ class OrigamiProcessor(VideoProcessorBase):
 # ---------------------------------------------------------
 # メイン画面処理
 # ---------------------------------------------------------
+
+# 音声を再生したか
+if "spoken_step" not in st.session_state:
+    st.session_state.spoken_step = 0
+
 step_num = tutor.get_current_step_number()
+
+# 
+if st.session_state.spoken_step != step_num:
+    speak(tutor.get_current_step()["instruction"])
+    st.session_state.spoken_step = step_num
 
 if step_num == 5:
     st.balloons()
-    st.success("🎉 finished！")
+    st.success("🎉 finished!")
 
     col1, col2 = st.columns([1, 1])
     with col1:
@@ -158,7 +168,7 @@ if step_num == 5:
             st.info("No image")
 
     with col2:
-        st.write("### Good job！")
+        st.write("### Good job!")
         st.divider()
 
         btn_col1, btn_col2 = st.columns(2)
@@ -239,9 +249,14 @@ else:
         )
         if ctx.video_processor:
             ctx.video_processor.step_num = step_num
+
             if ctx.video_processor.is_ok:
                 ctx.video_processor.reset_counter()
                 tutor.next_step()
+
+                if not tutor.is_finished():
+                    speak(tutor.get_current_step()["instruction"])
+                    
                 st.rerun()
 
     with col2:
