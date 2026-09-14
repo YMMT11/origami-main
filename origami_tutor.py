@@ -1,4 +1,4 @@
-import pyttsx3
+import streamlit as st
 import time
 #from check_origamis import check_origami
 
@@ -7,15 +7,18 @@ import time
 # 音声
 # =========================================================
 
-engine = pyttsx3.init()
-
 def speak(text):
-    try:
-        engine.stop()
-        engine.say(text)
-        engine.runAndWait()
-    except RuntimeError:
-        pass
+    st.components.v1.html(
+        f"""
+        <script>
+        const utterance = new SpeechSynthesisUtterance({text!r});
+        utterance.lang = "ja-JP";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+        </script>
+        """,
+        height=0,
+    )
 
 # =========================================================
 # 折り紙チューター：ハートの折り方
