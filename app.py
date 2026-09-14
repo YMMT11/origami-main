@@ -3,7 +3,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import streamlit as st
-from streamlit_autorefresh import st_autorefresh
+#from streamlit_autorefresh import st_autorefresh
 from streamlit_webrtc import VideoProcessorBase, WebRtcMode, webrtc_streamer
 
 import demo
@@ -48,6 +48,11 @@ class OrigamiProcessor(VideoProcessorBase):
             min_tracking_confidence=0.5,
         )
 
+    def set_counter(self, step_num):
+        self.step_num = step_num
+        self.ok_counter = 0
+        self.is_ok = False
+    
     def reset_counter(self):
         self.ok_counter = 0
         self.is_ok = False
@@ -184,7 +189,7 @@ if step_num == 5:
                 #st.rerun()
 else:
     # リフレッシュ間隔を1000ms (1秒) に広げて全体再描画の負荷を軽減
-    st_autorefresh(interval=1000, key="origami_step_checker")
+    #st_autorefresh(interval=1000, key="origami_step_checker")
 
     current_step_data = tutor.get_current_step()
     instruction = current_step_data["instruction"]
@@ -248,11 +253,17 @@ else:
             unsafe_allow_html=True
         )
         if ctx.video_processor:
-            ctx.video_processor.step_num = step_num
 
-            if ctx.video_processor.is_ok:
-                ctx.video_processor.reset_counter()
-                tutor.next_step()
+        # 現在のTutorのステップとCV側のステップが違う場合
+        if ctx.video_processor.step_num != step_num:
+            ctx.video_processor.set_step(step_num)
+    
+        # 正しい折り方が一定フレーム続いた場合だけ次へ進む
+        if ctx.video_processor.is_ok:
+
+            ctx.video_processor.reset_counter()
+    
+            tutor.next_step()
 
                 #if not tutor.is_finished():
                     #speak(tutor.get_current_step()["instruction"])
